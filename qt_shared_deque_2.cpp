@@ -8,16 +8,22 @@ int main(int argc, char *argv[])
 {
   SharedRingBuffer<int> buffer;
 
-  buffer.create(100);
+  if (!buffer.create(100)) {
+    std::cerr << "Can't create memory";
+    return 1;
+  }
 
   while(true){
-    if(buffer.getCount() == 0){
-      //int value = 3;
-      int value;
-      std::cout << "$>";
-      std::cin >> value;
-      buffer.enqueue(value);
-      std::cout << "Enqueued: " << value << std::endl;
+    int val;
+    std::cout << "$>";
+    if (!(std::cin >> val)) { break; }
+
+
+    if(buffer.enqueue(val)){ 
+      std::cout << "Enqueued: " << val << "\n";
+    }
+    else {
+      std::cout << "Buffer full" << "\n";
       break;
     }
   }
